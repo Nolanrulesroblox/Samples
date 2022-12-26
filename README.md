@@ -1,2 +1,5 @@
 # Samples
-Samples
+PHP,
+Python,
+Javascript,
+Bash
