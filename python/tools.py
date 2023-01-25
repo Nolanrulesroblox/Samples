@@ -1,11 +1,14 @@
-import mysql
-class DatabaseQueryMysql():
-    def query(query: str,params: list,handle,column = True):
-        handle.commit()
+import mysql as sql
+class mysql():
+    def __init__(self,databaseConnect):
+        self.database = databaseConnect
+        self.results = None
+    def query(self,query: str,params: list,column = True):
+        self.database.commit()
         err = 0
         result = ''
         try:
-            mycursor = handle.cursor()
+            mycursor = self.database.cursor()
             mycursor.execute(query,params)
             if column:
                 columns = mycursor.description
@@ -18,9 +21,10 @@ class DatabaseQueryMysql():
                 "error":int(err),
                 "affectedRows":mycursor.rowcount
             }
-            handle.commit()
-            return returndata
-        except mysql.connector.Error as err:
+            self.database.commit()
+            self.results = returndata
+            return True
+        except sql.connector.Error as err:
             err = err
             returndata = {
                 "result":result,
@@ -28,16 +32,19 @@ class DatabaseQueryMysql():
                 "error":int(err.errno),
                 "affectedRows":mycursor.rowcount
             }
-            handle.commit()
-            return returndata
-    def result(query):
+            self.database.commit()
+            self.results = returndata
+            return False
+    def result(self):
+        if self.results['result']:
+            return self.results['result']
         #just returns the result.
-        return query['result']
-    def error(query):
-        if int(query['error']) != 0:
-            return int(query['error'])
         return False
-    def changedRows(query):
-        return query['affectedRows']
-    def length(query):
-        return query['length']
+    def error(self):
+        if int(self.results['error']) != 0:
+            return int(self.results['error'])
+        return False
+    def changedRows(self):
+        return self.results['affectedRows']
+    def length(self):
+        return self.results['length']
