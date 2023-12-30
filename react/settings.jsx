@@ -1,3 +1,7 @@
+// note: this file was created on 1/5/23 but was submitted to github before 2024. Keep in mind, not all functions work or have effects. CSS not included. 
+//
+//
+
 import { useState } from 'react';
 import './index.css'
 import Switch from "react-switch";
