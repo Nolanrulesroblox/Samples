@@ -1,7 +1,8 @@
 import mysql as sql
+import mysql.connector as mysqlConnector
 
 class mysql():
-    def __init__(self, databaseConnect, debug=False):
+    def __init__(self, databaseConnect: False, debug=False,**kwargs):
         """
         Constructor method for the `mysql` class.
 
@@ -15,13 +16,17 @@ class mysql():
         - debug: Debug mode status.
         - isLocked: Flag indicating whether the instance is currently locked.
         - Normalcursor: Placeholder for a normal cursor.
+
+        Kwargs:
+        - lazyConnectArgs = {"host":"HOST","user":"USER","password":"PASSWORD","database","DATABASE"} or really any part of the mysql.connector.connect args
         """
         self.database = databaseConnect
         self.results = None
         self.debug = debug
         self.isLocked = False
         self.Normalcursor = False
-
+        self.lazyConnect = kwargs.get("lazyConnect",False) == True
+        self.lazyConnectArgs = kwargs.get("lazyConnectArgs",False)
     def start(self):
         """
         Initiates a transaction on the connected database.
@@ -61,6 +66,8 @@ class mysql():
             print("Query failed. Error:", db.error())
         db.commit()
         """
+        if self.lazyConnect == True and not self.database:
+            self.database = mysqlConnector.connect(**self.lazyConnectArgs)
         if not self.isLocked:
             self.database.commit()
         err = 0
@@ -164,7 +171,8 @@ class mysql():
         """
         err = 0
         result = ''
-
+        if self.lazyConnect == True and not self.database:
+            self.database = mysqlConnector.connect(**self.lazyConnectArgs)
         if lock_type and lock_type not in ("FOR UPDATE", "FOR DELETE"):
             raise ValueError("Lock type must be 'FOR UPDATE' or 'FOR DELETE'")
         self.isLocked = True
