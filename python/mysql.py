@@ -27,6 +27,8 @@ class mysql():
         self.Normalcursor = False
         self.lazyConnect = kwargs.get("lazyConnect",False) == True
         self.lazyConnectArgs = kwargs.get("lazyConnectArgs",False)
+    def connector(self):
+        return self.database
     def start(self):
         """
         Initiates a transaction on the connected database.
