@@ -1,3 +1,14 @@
+"""
+as of 9/12/24:
+
+this is no longer apart of any prod code. this class was only meant for making quick calls for testing.
+
+to the person who used this in prod, what the hell.
+
+Having to write a note due to you.
+
+Thanks Chris.
+"""
 import mysql as sql
 import mysql.connector as mysqlConnector
 
